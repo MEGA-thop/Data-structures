@@ -69,4 +69,81 @@ int display(int x[], int top)
     return 1;
 }
 
+#include <stdio.h>
+#define SIZE 5
+
+int q[SIZE];
+int front = -1, rear = -1;
+
+int isFull() {
+    return (rear + 1) % SIZE == front;
+}
+
+int isEmpty() {
+    return front == -1;
+}
+
+void enqueue(int x) {
+    if (isFull()) {
+        printf("Queue Full\n");
+        return;
+    }
+
+    if (isEmpty())
+        front = 0;
+
+    rear = (rear + 1) % SIZE;
+    q[rear] = x;
+
+    printf("%d inserted\n", x);
+}
+
+void dequeue() {
+    if (isEmpty()) {
+        printf("Queue Empty\n");
+        return;
+    }
+
+    printf("%d removed\n", q[front]);
+
+    if (front == rear) {
+        front = rear = -1;  // queue becomes empty
+    } else {
+        front = (front + 1) % SIZE;
+    }
+}
+
+void display() {
+    if (isEmpty()) {
+        printf("Queue empty\n");
+        return;
+    }
+
+    int i = front;
+    while (1) {
+        printf("%d ", q[i]);
+        if (i == rear)
+            break;
+        i = (i + 1) % SIZE;
+    }
+    printf("\n");
+}
+
+int main() {
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
+    dequeue();
+    dequeue();
+    enqueue(40);
+    enqueue(50);
+    enqueue(60);
+
+    display();
+
+    return 0;
+}
+
+
 #endif
+
