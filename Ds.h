@@ -1,149 +1,131 @@
-#ifndef SAMPLE_DATA_STRUCTURES_H
-#define SAMPLE_DATA_STRUCTURES_H
+#ifndef STACK_H
+#define STACK_H
+
 //stacks
+
 #define MAX 20
 #include <stdio.h>
-/* Check if full */
-int isFull(int top)
-{
-    if(top == MAX - 1)
-        return 1;
-    return 0;
-}
-/* Check if empty */
-int isEmpty(int top)
-{
-    if(top == -1)
-        return 1;
-    return 0;
-}
-/* Push */
-int push(int x[], int *top, int n)
-{
-    if(isFull(*top))
-    {
-        printf("Stack Overflow\n");
-        return 0;
-    }
-    (*top)++;
-    x[*top] = n;
-    return 1;
-}
-/* Pop */
-int pop(int x[], int *top)
-{
-    if(isEmpty(*top))
-    {
-        printf("Stack Underflow\n");
-        return 0;
-    }
+typedef struct {
+    int d[MAX];
+    int t;
+} Stack;
 
-    printf("Popped: %d\n", x[*top]);
-    (*top)--;
-    return 1;
-}
-/* Peek */
-int peek(int x[], int top)
-{
-    if(isEmpty(top))
-    {
-        printf("Stack empty\n");
-        return 0;
-    }
-    printf("Top: %d\n", x[top]);
-    return 1;
-}
-/* Display */
-int display(int x[], int top)
-{
-    if(isEmpty(top))
-    {
-        printf("Stack empty\n");
-        return 0;
-    }
 
-    for(int i = top; i >= 0; i--)
-        printf("%d ", x[i]);
+void initStack(Stack *s)
+{
+    s->t = -1;
+}
+
+
+int isFull(Stack *s)
+{
+    return (s->t == MAX - 1);
+}
+
+
+int isEmpty(Stack *s)
+{
+    return (s->t == -1);
+}
+
+
+int push(Stack *s, int n)
+{
+    if(isFull(s))
+        return 0;
+    s->d[++(s->t)] = n;
+    return 1;
+}
+
+
+int pop(Stack *s)
+{
+    if(isEmpty(s))
+        return 0;
+  s->d[s->t--];
+    return 1;
+}
+
+
+int peek(Stack *s)
+{
+    if(isEmpty(s))
+        return 0;
+    return s->d[s->t];
+}
+
+
+int display(Stack *s)
+{
+    if(isEmpty(s))
+        return 0;
+
+    for(int i = s->t; i >= 0; i--)
+        printf("%d ", s->d[i]);
 
     printf("\n");
     return 1;
 }
 
-#include <stdio.h>
-#define SIZE 5
+//queues
 
-int q[SIZE];
-int front = -1, rear = -1;
+typedef struct  {
+    int data[MAX];
+    int f,r;
+}queue;
+void initQueue(queue *que) {
+    que->f = -1;
+    que->r = -1;
+}
+int isfull(queue *que) {
+    return que->r == MAX - 1;
+}
+int isempty(queue *que) {
+    return que->f == -1;
+}
+int enqueue(queue *que,int x) {
+    if (isfull(que))
+        return 0;
+    if (isempty(que))
+        que->f++;
+    que->data[++(que->r)] = x;
+    return 1;
+}
+int dequeue(queue *que) {
+    if (isempty(que))
+        return 0;
+    if (que->r == que->f){
+        que->f = -1;
+        que->r =- 1;
+    }
+    else
+        que->f++;
+    return 1;
+}
+int qpeekf(queue *que) {
+    if (isempty(que))
+        return 0;
+    return que->data[que->f];
 
-int isFull() {
-    return (rear + 1) % SIZE == front;
+}
+int qpeekr(queue *que) {
+    if (isempty(que))
+        return 0;
+    return que->data[que->r];
 }
 
-int isEmpty() {
-    return front == -1;
-}
-
-void enqueue(int x) {
-    if (isFull()) {
-        printf("Queue Full\n");
-        return;
+int displayq(queue *que) {
+    if (isempty(que)) {
+        printf("Queue is empty");
+        return 0;
     }
-
-    if (isEmpty())
-        front = 0;
-
-    rear = (rear + 1) % SIZE;
-    q[rear] = x;
-
-    printf("%d inserted\n", x);
-}
-
-void dequeue() {
-    if (isEmpty()) {
-        printf("Queue Empty\n");
-        return;
-    }
-
-    printf("%d removed\n", q[front]);
-
-    if (front == rear) {
-        front = rear = -1;  // queue becomes empty
-    } else {
-        front = (front + 1) % SIZE;
-    }
-}
-
-void display() {
-    if (isEmpty()) {
-        printf("Queue empty\n");
-        return;
-    }
-
-    int i = front;
-    while (1) {
-        printf("%d ", q[i]);
-        if (i == rear)
-            break;
-        i = (i + 1) % SIZE;
+    int i = que->f;
+    while (i <= que->r) {
+        printf("%d ",que->data[i]);
+        i++;
     }
     printf("\n");
+    return 1;
 }
-
-int main() {
-    enqueue(10);
-    enqueue(20);
-    enqueue(30);
-    dequeue();
-    dequeue();
-    enqueue(40);
-    enqueue(50);
-    enqueue(60);
-
-    display();
-
-    return 0;
-}
-
 
 #endif
-
