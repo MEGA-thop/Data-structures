@@ -1,130 +1,129 @@
-#ifndef STACK_H
-#define STACK_H
+#ifndef DS_H
+#define DS_H
 
-//stacks
-
-#define MAX 20
 #include <stdio.h>
+
+#define MAX 5
+
+/* ===================== STACK ===================== */
+
 typedef struct {
-    int d[MAX];
-    int t;
+    int data[MAX];
+    int top;
 } Stack;
 
-
-void initStack(Stack *s)
-{
-    s->t = -1;
+void s_init(Stack *s) {
+    s->top = -1;
 }
 
-
-int isFull(Stack *s)
-{
-    return (s->t == MAX - 1);
+int s_isfull(Stack *s) {
+    return s->top == MAX - 1;
 }
 
-
-int isEmpty(Stack *s)
-{
-    return (s->t == -1);
+int s_isempty(Stack *s) {
+    return s->top == -1;
 }
 
-
-int push(Stack *s, int n)
-{
-    if(isFull(s))
-        return 0;
-    s->d[++(s->t)] = n;
+int s_push(Stack *s, int x) {
+    if (s_isfull(s)) return 0;
+    s->data[++s->top] = x;
     return 1;
 }
 
-
-int pop(Stack *s)
-{
-    if(isEmpty(s))
-        return 0;
-  s->d[s->t--];
+int s_pop(Stack *s) {
+    if (s_isempty(s)) return 0;
+    s->top--;
     return 1;
 }
 
-
-int peek(Stack *s)
-{
-    if(isEmpty(s))
-        return 0;
-    return s->d[s->t];
+int s_peek(Stack *s) {
+    if (s_isempty(s)) return 0;
+    return s->data[s->top];
 }
 
+/* ===================== LINEAR QUEUE ===================== */
 
-int display(Stack *s)
-{
-    if(isEmpty(s))
-        return 0;
-
-    for(int i = s->t; i >= 0; i--)
-        printf("%d ", s->d[i]);
-
-    printf("\n");
-    return 1;
-}
-
-//queues
-
-typedef struct  {
+typedef struct {
     int data[MAX];
-    int f,r;
-}queue;
-void initQueue(queue *que) {
-    que->f = -1;
-    que->r = -1;
-}
-int isfull(queue *que) {
-    return que->r == MAX - 1;
-}
-int isempty(queue *que) {
-    return que->f == -1;
-}
-int enqueue(queue *que,int x) {
-    if (isfull(que))
-        return 0;
-    if (isempty(que))
-        que->f++;
-    que->data[++(que->r)] = x;
-    return 1;
-}
-int dequeue(queue *que) {
-    if (isempty(que))
-        return 0;
-    if (que->r == que->f){
-        que->f = -1;
-        que->r =- 1;
-    }
-    else
-        que->f++;
-    return 1;
-}
-int qpeekf(queue *que) {
-    if (isempty(que))
-        return 0;
-    return que->data[que->f];
+    int f, r;
+} Queue;
 
-}
-int qpeekr(queue *que) {
-    if (isempty(que))
-        return 0;
-    return que->data[que->r];
+void q_init(Queue *q) {
+    q->f = -1;
+    q->r = -1;
 }
 
-int displayq(queue *que) {
-    if (isempty(que)) {
-        printf("Queue is empty");
-        return 0;
+int q_isfull(Queue *q) {
+    return q->r == MAX - 1;
+}
+
+int q_isempty(Queue *q) {
+    return q->f == -1;
+}
+
+int q_enqueue(Queue *q, int x) {
+    if (q_isfull(q)) return 0;
+
+    if (q_isempty(q))
+        q->f = 0;
+
+    q->data[++q->r] = x;
+    return 1;
+}
+
+int q_dequeue(Queue *q) {
+    if (q_isempty(q)) return 0;
+
+    if (q->f == q->r) {
+        q->f = q->r = -1;
+    } else {
+        q->f++;
     }
-    int i = que->f;
-    while (i <= que->r) {
-        printf("%d ",que->data[i]);
-        i++;
+    return 1;
+}
+
+/* ===================== CIRCULAR QUEUE ===================== */
+
+typedef struct {
+    int data[MAX];
+    int f, r;
+} CQueue;
+
+void cq_init(CQueue *cq) {
+    cq->f = -1;
+    cq->r = -1;
+}
+
+int cq_isfull(CQueue *cq) {
+    return ( (cq->r + 1) % MAX == cq->f );
+}
+
+int cq_isempty(CQueue *cq) {
+    return cq->f == -1;
+}
+
+int cq_enqueue(CQueue *cq, int x) {
+    if (cq_isfull(cq)) return 0;
+
+    if (cq_isempty(cq)) {
+        cq->f = 0;
+        cq->r = 0;
+    } else {
+        cq->r = (cq->r + 1) % MAX;
     }
-    printf("\n");
+
+    cq->data[cq->r] = x;
+    return 1;
+}
+
+int cq_dequeue(CQueue *cq) {
+    if (cq_isempty(cq)) return 0;
+
+    if (cq->f == cq->r) {
+        cq->f = cq->r = -1;
+    } else {
+        cq->f = (cq->f + 1) % MAX;
+    }
     return 1;
 }
 
